@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>UE304 – Révisions TD1→TD5</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <div class="title">
+    <h1>UE304 – Révisions TD1 à TD5</h1>
+    <p class="sub">Flashcards • QCM • Vignettes • Questions ouvertes • Annonce diag</p>
+  </div>
+
+  <div class="controls">
+    <label>TD :
+      <select id="tdFilter"></select>
+    </label>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="cards">Flashcards</button>
+      <button class="tab" data-tab="qcm">QCM</button>
+      <button class="tab" data-tab="vignettes">Vignettes</button>
+      <button class="tab" data-tab="ouvertes">Questions ouvertes</button>
+      <button class="tab" data-tab="annonce">Annonce diag</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="cards" class="panel active">
+    <div class="row">
+      <button id="prevCard" class="btn">◀</button>
+
+      <div class="card" id="flashcard" tabindex="0" aria-label="Flashcard">
+        <div class="face front" id="cardFront"></div>
+        <div class="face back" id="cardBack"></div>
+        <div class="hint">Clique / Espace pour retourner</div>
+      </div>
+
+      <button id="nextCard" class="btn">▶</button>
+    </div>
+
+    <div class="row meta">
+      <div id="cardCounter"></div>
+      <div class="row">
+        <button id="markKnown" class="btn ghost">Je sais ✅</button>
+        <button id="markUnknown" class="btn ghost">À revoir 🔁</button>
+        <button id="resetProgress" class="btn ghost danger">Reset</button>
+      </div>
+    </div>
+    <div class="row small" id="knownStats"></div>
+  </section>
+
+  <section id="qcm" class="panel">
+    <div class="qbox">
+      <div class="qhead">
+        <div id="qcmCounter"></div>
+        <button id="newQcm" class="btn ghost">Nouvelle question</button>
+      </div>
+      <h2 id="qcmQuestion"></h2>
+      <div id="qcmOptions" class="options"></div>
+      <div id="qcmFeedback" class="feedback"></div>
+    </div>
+  </section>
+
+  <section id="vignettes" class="panel">
+    <div id="vignetteList" class="list"></div>
+
+    <div class="qbox" id="vignetteBox" hidden>
+      <button class="btn ghost" id="backToVignettes">← Retour</button>
+      <h2 id="vTitle"></h2>
+      <p class="case" id="vCase"></p>
+      <div id="vQuestions"></div>
+    </div>
+  </section>
+
+  <section id="ouvertes" class="panel">
+    <div id="openList" class="list"></div>
+  </section>
+
+  <section id="annonce" class="panel">
+    <div class="qbox">
+      <h2>Annonce diagnostique – mémo express</h2>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Avant</h3>
+          <ul>
+            <li>Lieu calme, confidentiel, sans passages.</li>
+            <li>Temps suffisant + disponibilité.</li>
+            <li>Dossier + contexte + projet thérapeutique.</li>
+            <li>Acteurs pertinents (patient au centre, proches si OK).</li>
+            <li>Supports simples (schémas/brochures).</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3>Pendant</h3>
+          <ul>
+            <li><b>Nommer</b> le trouble en mots simples.</li>
+            <li>Ne pas minimiser / ne pas mentir / pas de jargon.</li>
+            <li>Laisser des silences (assimilation).</li>
+            <li><b>Écouter</b> émotions, questions, non-dits.</li>
+            <li><b>Accompagner</b> : plan de prise en charge.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3>Après</h3>
+          <ul>
+            <li>Vérifier ce qui a été compris.</li>
+            <li>Proposer un prochain RDV.</li>
+            <li>Donner un écrit si possible.</li>
+            <li>Orienter vers ressources/associations.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="small muted">Astuce partiel : structure toujours en « Expliquer – Écouter – Accompagner ».</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="small muted">Hors ligne. Progression enregistrée dans ton navigateur.</div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
