@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>UE304 – Révisions TD1→TD5</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="title">
+        <h1>UE304 – Révisions TD1 à TD5</h1>
+        <p class="sub">Un espace calme pour apprendre, réviser et s’entraîner sans pression.</p>
+      </div>
+
+      <div class="controls">
+        <label>TD :
+          <select id="tdFilter"></select>
+        </label>
+
+        <button id="togglePause" class="pill" type="button" title="Pause cosy">☕ Pause cosy</button>
+
+        <nav class="tabs" role="tablist" aria-label="Navigation">
+          <button class="tab active" data-tab="cards">Flashcards</button>
+          <button class="tab" data-tab="qcm">QCM</button>
+          <button class="tab" data-tab="vignettes">Vignettes</button>
+          <button class="tab" data-tab="ouvertes">Questions ouvertes</button>
+          <button class="tab" data-tab="fiches">Fiches</button>
+          <button class="tab" data-tab="arevoir">À revoir</button>
+          <button class="tab" data-tab="annonce">Annonce diag</button>
+        </nav>
+      </div>
+    </div>
+    
+      <div class="hero-illu" aria-hidden="true">
+        <svg viewBox="0 0 420 220" role="img">
+          <path d="M38 150c36-70 98-104 158-86 54 16 78 72 120 88 36 14 70 6 96-14"
+                fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" opacity=".18"/>
+          <circle cx="118" cy="84" r="18" fill="currentColor" opacity=".14"/>
+          <circle cx="308" cy="118" r="26" fill="currentColor" opacity=".10"/>
+          <rect x="70" y="140" width="280" height="40" rx="18" fill="currentColor" opacity=".07"/>
+          <rect x="96" y="150" width="120" height="10" rx="8" fill="currentColor" opacity=".14"/>
+          <rect x="96" y="166" width="200" height="10" rx="8" fill="currentColor" opacity=".10"/>
+        </svg>
+      </div>
+    
+  </div>
+</header>
+
+
+
+<main>
+  <section class="welcome" aria-label="Accueil">
+    <div class="welcome-card">
+      
+      <div class="welcome-text">
+        <h2>On révise doucement, on progresse vite.</h2>
+        <p class="muted">Choisis un TD, puis alterne : <b>Flashcards → QCM → Vignette</b>. Tes progrès sont enregistrés sur cet appareil.</p>
+        <div class="intent">
+          <span class="intentLabel">Aujourd’hui je révise :</span>
+          <input id="todayIntent" type="text" placeholder="ex : TD3 – Anamnèse (30 min) • puis 10 QCM" />
+          <button id="saveIntent" class="pill pillSmall" type="button">Enregistrer</button>
+        </div>
+      </div>
+
+      
+      <div class="welcome-curve" aria-hidden="true">
+        <div class="curveTitle">Progression</div>
+        <div id="progressCurve" class="curve"><div id="curveFill" class="curveFill"></div></div>
+        </div>
+      </div>
+
+      <div class="welcome-tags" aria-hidden="true">
+        <span class="tag">Cozy</span>
+        <span class="tag">Clair</span>
+        <span class="tag">Efficace</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="pauseWrap" aria-label="Pause cosy" hidden id="pauseCard">
+    <div class="pauseCard">
+      <div class="pauseLeft">
+        <h3>Pause cosy</h3>
+        <p class="muted">Respire 2 minutes. S’étirer, boire un verre d’eau, puis on repart. Apprendre n’est pas linéaire.</p>
+        <div class="timerRow">
+          <div class="timerBox">
+            <div class="timerLabel">Minuteur</div>
+            <div id="timerDisplay" class="timerValue">02:00</div>
+          </div>
+          <div class="timerBtns">
+            <button id="startTimer" class="btn ghost" type="button">Démarrer</button>
+            <button id="resetTimerBtn" class="btn ghost" type="button">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="pauseIllu" aria-hidden="true"></div>
+    </div>
+  </section>
+
+
+  <section id="cards" class="panel active">
+    <div class="row">
+      <button id="prevCard" class="btn">◀</button>
+
+      <div class="card" id="flashcard" tabindex="0" aria-label="Flashcard">
+        <div class="face front" id="cardFront"></div>
+        <div class="face back" id="cardBack"></div>
+        <div class="hint">Clique / Espace pour retourner</div>
+      </div>
+
+      <button id="nextCard" class="btn">▶</button>
+    </div>
+
+    <div class="row meta">
+      <div id="cardCounter"></div>
+      <div class="row">
+        <button id="markKnown" class="btn ghost">Je sais ✅</button>
+        <button id="markUnknown" class="btn ghost">À revoir 🔁</button>
+        <button id="resetProgress" class="btn ghost danger">Reset</button>
+      </div>
+    </div>
+    <div class="row small" id="knownStats"></div>
+  </section>
+
+  <section id="qcm" class="panel">
+    <div class="qbox">
+      <div class="qhead">
+        <div id="qcmCounter"></div>
+        <button id="newQcm" class="btn ghost">Nouvelle question</button>
+      </div>
+      <h2 id="qcmQuestion"></h2>
+      <div id="qcmOptions" class="options"></div>
+      <div id="qcmFeedback" class="feedback"></div>
+    </div>
+  </section>
+
+  <section id="vignettes" class="panel">
+    <div id="vignetteList" class="list"></div>
+
+    <div class="qbox" id="vignetteBox" hidden>
+      <button class="btn ghost" id="backToVignettes">← Retour</button>
+      <h2 id="vTitle"></h2>
+      <p class="case" id="vCase"></p>
+      <div id="vQuestions"></div>
+    </div>
+  </section>
+
+  <section id="ouvertes" class="panel">
+    <div id="openList" class="list"></div>
+  </section>
+
+  <section id="fiches" class="panel" role="tabpanel">
+    <div class="fiches-head">
+      <h2>Fiches de révision</h2>
+      <p class="muted">Une fiche par TD, détaillée mais lisible. Utilise la recherche pour retrouver un terme en 1 seconde.</p>
+      <div class="searchbar">
+        <input id="ficheSearch" type="search" placeholder="Rechercher dans les fiches (ex: anamnèse, comorbidité, psychoéducation…)"/>
+      </div>
+    </div>
+    <div id="fichesList" class="fiches"></div>
+  </section>
+
+  
+  
+  <section id="arevoir" class="panel">
+    <div class="qbox">
+      <h2>À revoir</h2>
+      <p class="muted small">Retrouve ici ce que tu as marqué ⭐ (flashcards, vignettes, questions ouvertes). Stocké sur cet appareil.</p>
+
+      <div class="arevoirGrid">
+        <div class="arevoirCol">
+          <h3>Flashcards ⭐</h3>
+          <div id="favCards" class="list"></div>
+        </div>
+
+        <div class="arevoirCol">
+          <h3>Vignettes ⭐</h3>
+          <div id="favVignettes" class="list"></div>
+        </div>
+
+        <div class="arevoirCol">
+          <h3>Questions ouvertes ⭐</h3>
+          <div id="favOpen" class="list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="annonce" class="panel">
+    <div class="qbox">
+      <h2>Annonce diagnostique – guide pratique</h2>
+      <p class="muted small">Structure attendue au partiel : <b>Expliquer – Écouter – Accompagner</b>.</p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Avant</h3>
+          <ul>
+            <li><b>Lieu</b> : calme, confidentiel, sans passages, cadre accueillant.</li>
+            <li><b>Position</b> : face à face, à hauteur égale, limiter les obstacles (bureau/écran).</li>
+            <li><b>Acteurs</b> : personnes pertinentes (patient au centre, proches si d’accord).</li>
+            <li><b>Préparation</b> : dossier + contexte + histoire + projet thérapeutique.</li>
+            <li><b>Supports</b> : schémas/brochures simples.</li>
+            <li><b>Temps</b> : prévoir large (≈ 1h à 1h30).</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3>Pendant</h3>
+          <ul>
+            <li><b>Nommer</b> le trouble (mots simples, pas de jargon).</li>
+            <li><b>Expliquer</b> : symptômes, évolution, étiologie, pronostic.</li>
+            <li><b>Dire la vérité</b> : ne pas minimiser, ne pas mentir.</li>
+            <li><b>Silences</b> : laisser des pauses → assimilation.</li>
+            <li><b>Écouter</b> : émotions, peurs, non-dits, questions.</li>
+            <li><b>Espoir réaliste</b> : une porte ouverte, sans fausse promesse.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3>Après</h3>
+          <ul>
+            <li>Vérifier ce qui a été compris (reformulation).</li>
+            <li>Proposer un prochain RDV (temporalité claire).</li>
+            <li>Donner un écrit si possible (résumé, ressources).</li>
+            <li>Orienter vers structures, autres pros, associations.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="item" style="margin-top:12px">
+        <b>Mini check-list (à cocher mentalement)</b>
+        <ul class="bullets small">
+          <li>Ai-je un <b>cadre</b> adapté (lieu/temps/acteurs) ?</li>
+          <li>Ai-je <b>nommé</b> clairement et expliqué sans jargon ?</li>
+          <li>Ai-je laissé de la place aux <b>émotions</b> et aux silences ?</li>
+          <li>Ai-je donné un <b>plan</b> (prise en charge + prochaine étape) ?</li>
+          <li>Ai-je évité l’<b>étiquette identitaire</b> (centrer sur la personne) ?</li>
+        </ul>
+      </div>
+
+      <div class="item" style="margin-top:10px">
+        <b>Phrases prêtes à l’emploi</b>
+        <ul class="bullets small">
+          <li>« Ce diagnostic ne vous résume pas : il nous aide à comprendre et à choisir la meilleure prise en charge. »</li>
+          <li>« Est-ce que vous voulez que je reprenne plus lentement, ou que je réexplique un point ? »</li>
+          <li>« Qu’est-ce qui vous inquiète le plus là, maintenant ? »</li>
+          <li>« La prochaine étape concrète, c’est… »</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="small muted">Hors ligne. Progression enregistrée dans ton navigateur.</div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
